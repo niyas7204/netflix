@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/apllication/hot_and_new/hot_and_new_bloc.dart';
+import 'package:netflix/core/const_strings.dart';
 import 'package:netflix/presantarion/new_and_hot/widget/every_one_watching_tile.dart';
 
 class EveryOnesWatchingPage extends StatelessWidget {
@@ -8,12 +9,37 @@ class EveryOnesWatchingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: const [
-        EveryOneWatchingTile(movieName: "WisdomVision"),
-        EveryOneWatchingTile(movieName: "WisdomVision"),
-        EveryOneWatchingTile(movieName: "WisdomVision")
-      ],
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<HotAndNewBloc>(context)
+          .add(const HotAndNewEvent.everyOneWatchingSoon());
+    });
+    return BlocBuilder<HotAndNewBloc, HotAndNewState>(
+      builder: (context, state) {
+        if (state.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state.isError) {
+          return const Center(
+            child: Text('is error'),
+          );
+        } else if (state.everyOneisWatchinglist.isEmpty) {
+          return const Center(
+            child: Text('is empty'),
+          );
+        } else {
+          return ListView.builder(
+            itemCount: state.everyOneisWatchinglist.length,
+            itemBuilder: (context, index) {
+              final movie = state.comingSoonlist[index];
+              return EveryOneWatchingTile(
+                  movieName: movie.title ?? 'no title',
+                  posterpath: '$imageApentUrl${movie.posterPath}',
+                  description: movie.overview ?? 'no description');
+            },
+          );
+        }
+      },
     );
   }
 }

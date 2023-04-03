@@ -13,13 +13,16 @@ class TabAppBarWidget extends StatelessWidget {
       title: const Text("New & Hot",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700)),
       actions: [
-        const Icon(Icons.cast),
-        kwidth,
-        Container(
-          height: 30,
-          width: 30,
-          color: Colors.blue,
-        )
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: Row(
+            children: const [
+              Icon(Icons.cast),
+              kwidth,
+              Icon(Icons.cast),
+            ],
+          ),
+        ),
       ],
       bottom: TabBar(
           isScrollable: true,

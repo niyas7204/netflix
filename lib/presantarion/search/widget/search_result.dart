@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/apllication/search/search_bloc.dart';
+import 'package:netflix/core/const_strings.dart';
 import 'package:netflix/core/constants.dart';
-import 'package:netflix/presantarion/common_widgets/movie_card.dart';
+import 'package:netflix/presantarion/search/widget/movie_card.dart';
 import 'package:netflix/presantarion/common_widgets/title.dart';
 
 class SearchResultScreen extends StatelessWidget {
@@ -16,8 +21,9 @@ class SearchResultScreen extends StatelessWidget {
         kheight,
         const TitleText(text: 'Movies & Tv'),
         kheight,
-        Expanded(
-            child: GridView.count(
+        Expanded(child: BlocBuilder<SearchBloc, SearchState>(
+          builder: (context, state) {
+            return GridView.count(
                 childAspectRatio: 1.1 / 1.5,
                 mainAxisSpacing: 7,
                 crossAxisSpacing: 7,
@@ -26,11 +32,15 @@ class SearchResultScreen extends StatelessWidget {
                 children: List.generate(
                   20,
                   (index) {
-                    return const MovieCard(
-                      imagedata: imageUrl,
+                    final movie = state.searchResultList[index];
+
+                    return MovieCard(
+                      imageUrl: "$imageApentUrl${movie.posterPath}",
                     );
                   },
-                )))
+                ));
+          },
+        ))
       ],
     );
   }

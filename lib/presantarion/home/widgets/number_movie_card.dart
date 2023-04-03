@@ -1,6 +1,9 @@
 import 'package:bordered_text/bordered_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/apllication/dowloads/downloads_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/core/const_strings.dart';
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/presantarion/common_widgets/title.dart';
 
@@ -8,32 +11,48 @@ class TopTen extends StatelessWidget {
   const TopTen({
     super.key,
     required this.size,
-    required this.imageData,
     required this.text,
   });
 
   final Size size;
   final String text;
-  final String imageData;
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      BlocProvider.of<DownloadsBloc>(context)
+          .add(const DownloadsEvent.getDownloadsImage());
+    });
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleText(text: text),
         kheight,
-        LimitedBox(
-          maxHeight: size.height * .20,
-          child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-                  5,
-                  (index) => NumberedCard(
-                        image: imageData,
-                        size: size,
-                        index: index + 1,
-                      ))),
+        BlocBuilder<DownloadsBloc, DownloadsState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state.downloads.isEmpty) {
+              return const Center(
+                child: Text('is empty'),
+              );
+            } else {
+              return LimitedBox(
+                  maxHeight: size.height * .20,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      final movie = state.downloads[index];
+                      return NumberedCard(
+                          size: size,
+                          image: '$imageApentUrl${movie.pasterPath}',
+                          index: index);
+                    },
+                  ));
+            }
+          },
         ),
       ],
     );
@@ -83,6 +102,5 @@ class NumberedCard extends StatelessWidget {
                 )))
       ],
     );
-    ;
   }
 }

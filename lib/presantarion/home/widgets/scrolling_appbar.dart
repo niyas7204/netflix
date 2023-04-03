@@ -29,20 +29,23 @@ class ScrolBasedAppBar extends StatelessWidget {
                       image: DecorationImage(
                           fit: BoxFit.cover, image: NetworkImage(logo))),
                 ),
-                Row(
-                  children: const [
-                    Icon(
-                      Icons.cast,
-                      size: 40,
-                      color: clrWhite,
-                    ),
-                    kwidth,
-                    Icon(
-                      Icons.cast,
-                      size: 30,
-                      color: clrWhite,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.cast,
+                        size: 40,
+                        color: clrWhite,
+                      ),
+                      kwidth,
+                      Icon(
+                        Icons.cast,
+                        size: 30,
+                        color: clrWhite,
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

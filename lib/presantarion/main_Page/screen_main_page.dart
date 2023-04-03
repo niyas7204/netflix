@@ -13,7 +13,7 @@ class MainPageSc extends StatelessWidget {
     const HomePage(),
     const NewAndHotPages(),
     const FastLaughScreen(),
-    const SearchPage(),
+    SearchPage(),
     DownloadsPage()
   ];
 

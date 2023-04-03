@@ -3,8 +3,17 @@ import 'package:netflix/core/constants.dart';
 import 'package:netflix/presantarion/new_and_hot/widget/icons.dart';
 
 class EveryOneWatchingTile extends StatelessWidget {
-  const EveryOneWatchingTile({super.key, required this.movieName});
+  const EveryOneWatchingTile({
+    super.key,
+    required this.movieName,
+    required this.posterpath,
+    required this.description,
+  });
   final String movieName;
+  final String posterpath;
+
+  final String description;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -16,11 +25,9 @@ class EveryOneWatchingTile extends StatelessWidget {
             Container(
               width: size.width * 1,
               height: size.width * .5,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                          'https://www.themoviedb.org/t/p/w250_and_h141_face/33j33midGw49BBxiqlNZeZ6PZ0O.jpg'))),
+                      fit: BoxFit.cover, image: NetworkImage(posterpath))),
             ),
             Positioned(
               bottom: 0,
@@ -46,10 +53,15 @@ class EveryOneWatchingTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                movieName,
-                style: TextStyle(
-                    fontSize: size.width * .06, fontWeight: FontWeight.bold),
+              SizedBox(
+                width: size.width * .6,
+                child: Text(
+                  movieName,
+                  style: TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      fontSize: size.width * .06,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
@@ -57,7 +69,6 @@ class EveryOneWatchingTile extends StatelessWidget {
                   children: const [
                     IconsInNewandHot(icon: Icons.telegram, label: 'Share'),
                     IconsInNewandHot(icon: Icons.add, label: "My List"),
-                    kwidth,
                     IconsInNewandHot(icon: Icons.play_arrow, label: "Play")
                   ],
                 ),
@@ -79,9 +90,7 @@ class EveryOneWatchingTile extends StatelessWidget {
               fontSize: size.width * .04, fontWeight: FontWeight.bold),
         ),
         kheight,
-        const Text(
-            "Contrary to popular belief, Lorem Ipsum is\n not simply random text. It has roots in a piece\n of classical Latin literature from 45 BC,\n making it over 2000 years old",
-            style: TextStyle(color: Colors.grey)),
+        Text(description, style: const TextStyle(color: Colors.grey)),
         kheight20
       ],
     );

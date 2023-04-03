@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/constants.dart';
@@ -8,10 +9,16 @@ class ComingSoonTileWidget extends StatelessWidget {
     required this.month,
     required this.day,
     required this.moviename,
+    required this.posterpath,
+    required this.id,
+    required this.description,
   });
   final String month;
   final String day;
   final String moviename;
+  final String posterpath;
+  final String id;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +43,7 @@ class ComingSoonTileWidget extends StatelessWidget {
           ),
         ),
         SizedBox(
+          width: size.width * .9,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -44,11 +52,10 @@ class ComingSoonTileWidget extends StatelessWidget {
                   Container(
                     width: size.width * .9,
                     height: size.width * .5,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(
-                                'https://www.themoviedb.org/t/p/w250_and_h141_face/33j33midGw49BBxiqlNZeZ6PZ0O.jpg'))),
+                            image: NetworkImage(posterpath))),
                   ),
                   Positioned(
                     bottom: 0,
@@ -74,11 +81,15 @@ class ComingSoonTileWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      moviename,
-                      style: TextStyle(
-                          fontSize: size.width * .06,
-                          fontWeight: FontWeight.bold),
+                    SizedBox(
+                      width: size.width * .6,
+                      child: Text(
+                        moviename,
+                        style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: size.width * .06,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
@@ -126,14 +137,12 @@ class ComingSoonTileWidget extends StatelessWidget {
               ),
               kheight20,
               Text(
-                'movieName',
+                moviename,
                 style: TextStyle(
                     fontSize: size.width * .04, fontWeight: FontWeight.bold),
               ),
               kheight,
-              const Text(
-                  "Contrary to popular belief, Lorem Ipsum is\n not simply random text. It has roots in a piece\n of classical Latin literature from 45 BC,\n making it over 2000 years old",
-                  style: TextStyle(color: Colors.grey)),
+              Text(description, style: const TextStyle(color: Colors.grey)),
               kheight20
             ],
           ),

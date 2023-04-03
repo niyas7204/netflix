@@ -1,14 +1,21 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:netflix/apllication/dowloads/downloads_bloc.dart';
 import 'package:netflix/core/colors/colors.dart';
+import 'package:netflix/core/const_strings.dart';
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/core/custom_widgets.dart';
 import 'package:netflix/presantarion/common_widgets/app_bar.dart';
 
 class DownloadsPage extends StatelessWidget {
   DownloadsPage({super.key});
-  final listOfWidgets = [const SmartDowloads(), Section2(), const Section3()];
+  final listOfWidgets = [
+    const SmartDowloads(),
+    const Section2(),
+    const Section3()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +58,15 @@ class SmartDowloads extends StatelessWidget {
 }
 
 class Section2 extends StatelessWidget {
-  Section2({super.key});
-  final imageList = [
-    "https://www.themoviedb.org/t/p/w220_and_h330_face/x3PIk93PTbxT88ohfeb26L1VpZw.jpg",
-    "https://www.themoviedb.org/t/p/w220_and_h330_face/kuf6dutpsT0vSVehic3EZIqkOBt.jpg",
-    "https://www.themoviedb.org/t/p/w220_and_h330_face/dm06L9pxDOL9jNSK4Cb6y139rrG.jpg",
-  ];
+  const Section2({super.key});
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      BlocProvider.of<DownloadsBloc>(context)
+          .add(const DownloadsEvent.getDownloadsImage());
+    });
+
     final Size size = MediaQuery.of(context).size;
     return Column(
       children: [
@@ -74,42 +81,51 @@ class Section2 extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.grey, fontSize: 16),
         ),
-        SizedBox(
-          width: size.width,
-          height: size.width * .8,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.grey.withOpacity(.3),
-                radius: size.width * .35,
-              ),
-              DowloadsImageWidget(
-                imageList: imageList,
-                imageIndex: 0,
-                rotation: 15,
-                margin: const EdgeInsets.only(left: 200),
-                containerheight: size.width * .54,
-                containerwidth: size.width * .34,
-              ),
-              DowloadsImageWidget(
-                imageList: imageList,
-                imageIndex: 1,
-                rotation: -15,
-                margin: const EdgeInsets.only(right: 200),
-                containerheight: size.width * .54,
-                containerwidth: size.width * .34,
-              ),
-              DowloadsImageWidget(
-                imageList: imageList,
-                imageIndex: 2,
-                rotation: 0,
-                margin: const EdgeInsets.only(top: 10),
-                containerheight: size.width * .59,
-                containerwidth: size.width * .35,
-              ),
-            ],
-          ),
+        BlocBuilder<DownloadsBloc, DownloadsState>(
+          builder: (context, state) {
+            return SizedBox(
+              width: size.width,
+              height: size.width * .8,
+              child: state.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey.withOpacity(.3),
+                          radius: size.width * .35,
+                        ),
+                        DowloadsImageWidget(
+                          imageList:
+                              '$imageApentUrl${state.downloads[0].pasterPath}',
+                          imageIndex: 0,
+                          rotation: 15,
+                          margin: const EdgeInsets.only(left: 200),
+                          containerheight: size.width * .54,
+                          containerwidth: size.width * .34,
+                        ),
+                        DowloadsImageWidget(
+                          imageList:
+                              '$imageApentUrl${state.downloads[1].pasterPath}',
+                          imageIndex: 1,
+                          rotation: -15,
+                          margin: const EdgeInsets.only(right: 200),
+                          containerheight: size.width * .54,
+                          containerwidth: size.width * .34,
+                        ),
+                        DowloadsImageWidget(
+                          imageList:
+                              '$imageApentUrl${state.downloads[2].pasterPath}',
+                          imageIndex: 2,
+                          rotation: 0,
+                          margin: const EdgeInsets.only(top: 10),
+                          containerheight: size.width * .59,
+                          containerwidth: size.width * .35,
+                        ),
+                      ],
+                    ),
+            );
+          },
         ),
       ],
     );
@@ -171,7 +187,7 @@ class DowloadsImageWidget extends StatelessWidget {
     required this.containerheight,
   });
 
-  final List<String> imageList;
+  final String imageList;
   final double rotation;
   final int imageIndex;
   final EdgeInsets margin;
@@ -187,7 +203,7 @@ class DowloadsImageWidget extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             image: DecorationImage(
-                fit: BoxFit.cover, image: NetworkImage(imageList[imageIndex]))),
+                fit: BoxFit.cover, image: NetworkImage(imageList))),
         width: containerwidth,
         height: containerheight,
       ),
